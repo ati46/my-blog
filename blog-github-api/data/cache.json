@@ -1,0 +1,71 @@
+{
+  "updated_at": "2025-12-03T11:17:04.605659Z",
+  "posts": [
+    {
+      "meta": {
+        "slug": "ArchLinux部署指南",
+        "title": "ArchLinux部署指南",
+        "summary": "\u003e 记录ArchLinux部署记录",
+        "path": "ArchLinux部署指南.md",
+        "sha": "cc3bea207d52fd0a8717a9d8fdf0447524deb737",
+        "updated_at": "2025-12-03T11:17:02.634723Z"
+      },
+      "content": "# ArchLinux部署指南\n\u003e 记录ArchLinux部署记录\n\n## 安装系统\n\n## 初始化\n\n## 配置桌面i3wm\n\n## 配置软件\n"
+    },
+    {
+      "meta": {
+        "slug": "Linux常用命令记录",
+        "title": "Linux常用命令记录",
+        "summary": "\u003e 记录Linux常用命令`tail` `wak`",
+        "path": "Linux常用命令记录.md",
+        "sha": "3b027671d0389d5dc7130ed8a84e011eb43ef052",
+        "updated_at": "2025-12-03T11:17:03.001594Z"
+      },
+      "content": "# Linux常用命令记录\n\u003e 记录Linux常用命令`tail` `wak`\n\n## tail\n\n## wak\n"
+    },
+    {
+      "meta": {
+        "slug": "Linux源",
+        "title": "Linux 各个发行版本的源",
+        "summary": "```",
+        "path": "Linux源.md",
+        "sha": "ae5d8d341e83d8953514b2e357676eb845130b34",
+        "updated_at": "2025-12-03T11:17:03.410846Z"
+      },
+      "content": "# Linux 各个发行版本的源\n## Debian 10\n### 国际\n``` \ndeb http://archive.debian.org/debian buster main contrib non-free\ndeb-src http://archive.debian.org/debian buster main contrib non-free\ndeb http://archive.debian.org/debian-security buster/updates main contrib non-free\ndeb-src http://archive.debian.org/debian-security buster/updates main contrib non-free\ndeb http://archive.debian.org/debian buster-updates main contrib non-free\ndeb-src http://archive.debian.org/debian buster-updates main contrib non-free\n```\n"
+    },
+    {
+      "meta": {
+        "slug": "README",
+        "title": "my-blog-content",
+        "summary": "博客内容",
+        "path": "README.md",
+        "sha": "c06efc3955a21b3ad27fa20b5fb5f10ae2f58e72",
+        "updated_at": "2025-12-03T11:17:03.81045Z"
+      },
+      "content": "# my-blog-content\n博客内容\n"
+    },
+    {
+      "meta": {
+        "slug": "离线语音模块控制智能家居",
+        "title": "离线语音模块控制智能家居",
+        "summary": "\u003e 觉得在线语音设备不安全，而且使用需要唤醒词，所以研究了使用离线语音模块进行智能家居控制。不需要说唤醒词，直接说指令词即可。",
+        "path": "树莓派/离线语音模块控制智能家居.md",
+        "sha": "506d2a523cadd047be81591659197b0c11011d15",
+        "updated_at": "2025-12-03T11:17:04.204223Z"
+      },
+      "content": "# 离线语音模块控制智能家居\n\u003e 觉得在线语音设备不安全，而且使用需要唤醒词，所以研究了使用离线语音模块进行智能家居控制。不需要说唤醒词，直接说指令词即可。\n\n## 需要的设备\n- 离线语音模块\n- 树莓派4B\n\n## 实现步骤\n"
+    },
+    {
+      "meta": {
+        "slug": "网站收藏",
+        "title": "网站收藏",
+        "summary": "\u003e 使用过的比较好的一些网站",
+        "path": "网站收藏.md",
+        "sha": "163d7164853d977bb1ebe0a479ef8d021f2d9da6",
+        "updated_at": "2025-12-03T11:17:04.605658Z"
+      },
+      "content": "# 网站收藏\n\u003e 使用过的比较好的一些网站\n\n## 内容类\n\n## 工具类\n"
+    }
+  ]
+}

@@ -1,0 +1,249 @@
+@import "highlight.js/styles/github.css";
+
+/* Light Mode 默认主题 */
+:root.theme-light {
+  --card-bg: #faf8f3;       /* 暖白 */
+  --card-border: #e4e1d8;
+  --card-shadow: rgba(15, 23, 42, 0.1);
+
+  --text-main: #1f2937;
+  --text-sub: #4b5563;
+
+  --chip-bg: #f5f5f4;
+  --chip-border: #d4d4d8;
+
+  --page-bg: #f3f4f6;
+
+  /* footer */
+  --footer-bg: rgba(247, 247, 247, 0.92);
+  --footer-border: #e5e7eb;
+  --footer-text: #9ca3af;
+}
+
+/* Dark Mode 夜间主题 */
+:root.theme-dark {
+  --card-bg: #1c1f24;       /* 柔和暗灰，不是纯黑 */
+  --card-border: #2b2f33;
+  --card-shadow: rgba(0, 0, 0, 0.55);
+
+  --text-main: #e5e7eb;
+  --text-sub: #d1d5db;
+
+  --chip-bg: #374151;
+  --chip-border: #4b5563;
+
+  --page-bg: #020617;
+
+  /* footer */
+  --footer-bg: rgba(2, 6, 23, 0.92);
+  --footer-border: #1f2937;
+  --footer-text: #9ca3af;
+}
+
+/* 应用页背景 */
+html,
+body {
+  min-height: 100%;
+  background-color: var(--page-bg);
+}
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+    -system-ui, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  color: var(--text-main);
+  background-color: var(--page-bg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* 链接样式 */
+a {
+  color: #0a4c8b;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* 底部版权 */
+.app-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-sizing: border-box;
+
+  padding: 10px 40px 20px;
+  font-size: 12px;
+  color: var(--footer-text);
+  text-align: right;
+
+  background: var(--footer-bg);
+  border-top: 1px solid var(--footer-border);
+  backdrop-filter: blur(4px);
+
+  z-index: 100;
+}
+
+@media (max-width: 1024px) {
+  .app-footer {
+    padding: 10px 16px 20px;
+  }
+}
+
+/* Markdown 内容 */
+.markdown-body {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #222;
+}
+
+.markdown-body pre {
+  padding: 12px 16px;
+  background: #f6f8fa;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+/* 列表整体区块之间增加一些呼吸空间 */
+.preview-card + .preview-card {
+  margin-top: 22px;
+}
+
+/* 全局文字抗锯齿，提升视觉质量 */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #e5e7eb;
+    background-color: #020617;
+  }
+
+  .app-bg {
+    background-image: none;
+    background-color: #020617;
+  }
+}
+:root.theme-light,
+body.theme-light {
+  color: #111827;
+  background-color: #f3f4f6;
+}
+
+:root.theme-dark,
+body.theme-dark {
+  color: #e5e7eb;
+  background-color: #020617;
+}
+
+/* 如果你有 .app-bg 背景图，可以在 dark 下弱化它 */
+.theme-dark .app-bg {
+  background-image: none;
+  background-color: #020617;
+}
+
+.theme-light .app-bg {
+  background-color: #f3f4f6;
+}
+
+/* --------------- */
+/* 代码块（亮色模式） */
+/* --------------- */
+
+:root.theme-light pre {
+  background: #f5f5f4 !important;     /* 柔和浅灰 */
+  border: 1px solid #e3e2dd !important;
+  border-radius: 12px;
+  padding: 14px 18px !important;
+  overflow-x: auto;
+  color: #2f3542 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.25s ease;
+}
+
+/* --------------- */
+/* 代码块（暗黑模式） */
+/* --------------- */
+:root.theme-dark pre {
+  background: #1d242c !important;     /* 深蓝灰，接近 VSCode Dark+ */
+  border: 1px solid rgba(255,255,255,0.06) !important;  /* 柔和微光边框 */
+  border-radius: 12px;
+  padding: 14px 18px !important;
+  overflow-x: auto;
+  color: #d1d5db !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+  transition: all 0.25s ease;
+}
+
+/* 代码块内 code 元素，不要额外背景（避免二次白框） */
+pre code {
+  background: none !important;
+  padding: 0 !important;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  line-height: 1.65;
+  font-size: 14px;
+  display: block;
+}
+
+/* ========= 代码高亮配色：暗黑模式 ========= */
+
+/* 基础文字颜色：亮一点，保证可读 */
+:root.theme-dark pre code,
+:root.theme-dark pre code.hljs {
+  color: #e5e7eb !important;
+}
+
+/* 注释、引用：偏灰 */
+.theme-dark .hljs-comment,
+.theme-dark .hljs-quote {
+  color: #6b7280 !important;
+}
+
+/* 关键字 / 保留字 */
+.theme-dark .hljs-keyword,
+.theme-dark .hljs-selector-tag,
+.theme-dark .hljs-literal,
+.theme-dark .hljs-name {
+  color: #60a5fa !important;   /* 蓝 */
+}
+
+/* 字符串 / 标题 / 类型 */
+.theme-dark .hljs-string,
+.theme-dark .hljs-title,
+.theme-dark .hljs-section,
+.theme-dark .hljs-type,
+.theme-dark .hljs-attribute {
+  color: #fbbf24 !important;   /* 黄 */
+}
+
+/* 数字 / 符号 */
+.theme-dark .hljs-number,
+.theme-dark .hljs-symbol,
+.theme-dark .hljs-bullet {
+  color: #a5b4fc !important;   /* 淡紫 */
+}
+
+/* 内建、meta 信息 */
+.theme-dark .hljs-built_in,
+.theme-dark .hljs-builtin-name,
+.theme-dark .hljs-meta {
+  color: #34d399 !important;   /* 绿 */
+}
+:root.theme-light {
+  --text-sub: #6b7280;
+}
+:root.theme-dark {
+  --text-sub: #9ca3af;
+}
