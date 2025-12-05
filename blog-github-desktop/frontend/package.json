@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:wails": "vite --mode wails",
     "build": "vite build",
+    "build:wails": "vite build --mode wails",
     "preview": "vite preview"
   },
   "dependencies": {
