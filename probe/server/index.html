@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPS 资产监控看板</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <style>
+        /* --- 核心配色：柔和灰调 --- */
+        :root {
+            /* 白天模式 */
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #334155;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --danger: #ef4444;
+            --shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --radius: 8px;
+        }
+
+        /* 黑夜模式 (默认) */
+        body.dark {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #e2e8f0;
+            --text-muted: #64748b;
+            --border: #334155;
+            --accent-blue: #60a5fa;
+            --accent-green: #34d399;
+            --shadow: none;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding: 24px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; }
+
+        /* 顶部导航 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        /* 切换按钮 */
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 40px; height: 40px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover { border-color: var(--text-muted); }
+
+        /* 列表容器 */
+        .monitor-list { display: flex; flex-direction: column; gap: 12px; }
+
+        /* 表头 */
+        .list-header {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1.5fr 1.5fr 1.5fr 1.2fr;
+            padding: 0 24px;
+            font-size: 12px; font-weight: 600; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        /* 卡片行 */
+        .monitor-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: 2fr 2fr 1.5fr 1.5fr 1.5fr 1.2fr;
+            align-items: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .monitor-card:hover { border-color: var(--text-muted); transform: translateY(-1px); }
+
+        /* --- 单元格样式 --- */
+        .host-info { display: flex; align-items: center; gap: 12px; }
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--text-muted);
+            box-shadow: 0 0 0 4px var(--bg-body);
+        }
+        .online .status-dot { background: var(--accent-green); box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
+        .host-name { font-weight: 600; font-size: 15px; }
+        .host-os { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+        /* 资源进度条 */
+        .resource-group { display: flex; flex-direction: column; gap: 8px; padding-right: 20px; }
+        .res-item { display: flex; align-items: center; gap: 10px; font-size: 12px; cursor: help; }
+        .res-label { width: 32px; color: var(--text-muted); }
+        .progress-bg { 
+            flex: 1; height: 6px; background: var(--bg-body);
+            border-radius: 3px; overflow: hidden; 
+        }
+        .progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+        .res-val { width: 40px; text-align: right; color: var(--text-main); font-family: 'JetBrains Mono', monospace; }
+
+        /* 费用标签 */
+        .cost-wrapper { display: flex; flex-direction: column; gap: 4px; }
+        .cost-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+        .tag-cycle {
+            font-size: 11px; padding: 2px 6px; border-radius: 4px;
+            background: var(--bg-body); border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+        .date-info { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+        .warn { color: #f59e0b; }
+        .danger { color: var(--danger); font-weight: 600; }
+
+        /* 数据展示 */
+        .mono-stat { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        .icon-up { color: var(--accent-blue); }
+        .icon-down { color: var(--accent-green); }
+
+        /* 移动端适配 */
+        @media (max-width: 900px) {
+            .list-header { display: none; }
+            .monitor-card { grid-template-columns: 1fr; gap: 16px; padding: 20px; }
+            .resource-group { padding-right: 0; }
+            .col::before {
+                content: attr(data-label); display: block; font-size: 11px;
+                color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase;
+            }
+            .host-info { margin-bottom: 0; }
+            .col { border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+            .col:last-child { border-bottom: none; padding-bottom: 0; }
+            .col-host::before { display: none; } 
+        }
+    </style>
+</head>
+<body class="dark">
+    <div id="app" class="container">
+        <header>
+            <h2><i class="ri-pulse-line"></i> <span>监控看板</span></h2>
+            <button class="theme-toggle" @click="toggleTheme" title="切换深色模式">
+                <i :class="isDarkMode ? 'ri-sun-line' : 'ri-moon-line'"></i>
+            </button>
+        </header>
+
+        <div class="monitor-list">
+            <div class="list-header">
+                <div>节点信息</div>
+                <div>系统负载 (CPU / MEM)</div>
+                <div>资产续费</div>
+                <div>实时网络</div>
+                <div>流量统计</div>
+                <div>更新时间</div>
+            </div>
+
+            <div class="monitor-card" v-for="h in sortedHosts" :key="h.host_name">
+                
+                <div class="col col-host host-info" :class="isOnline(h.last_seen)?'online':'offline'">
+                    <div class="status-dot"></div>
+                    <div>
+                        <div class="host-name">{{ h.host_name }}</div>
+                        <div class="host-os">{{ h.os || 'Linux' }} · {{ h.location || 'Loc' }}</div>
+                    </div>
+                </div>
+
+                <div class="col resource-group" data-label="资源占用">
+                    <div class="res-item" :title="'CPU使用率: ' + h.cpu.toFixed(1) + '%'">
+                        <span class="res-label">CPU</span>
+                        <div class="progress-bg">
+                            <div class="progress-fill" :style="{width: h.cpu+'%', background: getLoadColor(h.cpu)}"></div>
+                        </div>
+                        <span class="res-val">{{ h.cpu.toFixed(0) }}%</span>
+                    </div>
+                    <div class="res-item" :title="'已用: ' + h.mem_used.toFixed(2) + 'G / 总计: ' + h.mem_total.toFixed(2) + 'G'">
+                        <span class="res-label">MEM</span>
+                        <div class="progress-bg">
+                            <div class="progress-fill" :style="{width: (h.mem_used/h.mem_total*100)+'%', background: '#94a3b8'}"></div>
+                        </div>
+                        <span class="res-val">{{ Math.round((h.mem_used / h.mem_total) * 100) }}%</span>
+                    </div>
+                </div>
+
+                <div class="col" data-label="费用周期">
+                    <div class="cost-wrapper">
+                        <div class="cost-badge">
+                            <span class="tag-cycle">{{ h.billing_cycle === 'YEAR'?'年付':'月付' }}</span>
+                            <span>{{ h.cost }}</span>
+                        </div>
+                        <div class="date-info" :class="getDueClass(h)">
+                            <i class="ri-calendar-line"></i>
+                            {{ getNextDueDate(h.start_date, h.billing_cycle) }}
+                            <span v-if="getDaysLeft(h) <= 30">({{ getDaysLeft(h) }}天)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col" data-label="实时网速">
+                    <div class="mono-stat">
+                        <i class="ri-arrow-down-s-fill icon-down"></i> {{ formatSize(h.speed_in) }}/s
+                    </div>
+                    <div class="mono-stat">
+                        <i class="ri-arrow-up-s-fill icon-up"></i> {{ formatSize(h.speed_out) }}/s
+                    </div>
+                </div>
+
+                <div class="col" data-label="已用流量">
+                    <div class="mono-stat" style="color: var(--text-main); font-weight: 600;">
+                        {{ formatSize(h.month_in + h.month_out) }}
+                    </div>
+                    <div class="stat-label">
+                        {{ h.reset_day }}号重置 | 
+                        <i class="ri-download-2-line"></i> {{ formatSize(h.month_in) }}
+                    </div>
+                </div>
+
+                <div class="col" data-label="最后更新">
+                    <div class="mono-stat" style="color: var(--text-muted);">
+                        {{ formatTime(h.last_seen) }}
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="hosts.length === 0" style="text-align: center; padding: 60px; color: var(--text-muted);">
+                <i class="ri-router-line" style="font-size: 32px; margin-bottom: 10px; display:block;"></i>
+                暂无节点接入，请启动 Agent
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp, ref, computed, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                const hosts = ref([]);
+                // 默认深色
+                const isDarkMode = ref(true);
+
+                const applyTheme = (dark) => {
+                    if (dark) {
+                        document.body.classList.add('dark');
+                    } else {
+                        document.body.classList.remove('dark');
+                    }
+                };
+
+                const toggleTheme = () => {
+                    isDarkMode.value = !isDarkMode.value;
+                    applyTheme(isDarkMode.value);
+                    localStorage.setItem('g-probe-theme', isDarkMode.value ? 'dark' : 'light');
+                };
+
+                const sortedHosts = computed(() => {
+                    return hosts.value.sort((a, b) => {
+                        const aOnline = (Date.now()/1000 - a.last_seen) < 15;
+                        const bOnline = (Date.now()/1000 - b.last_seen) < 15;
+                        if (aOnline !== bOnline) return bOnline ? 1 : -1; 
+                        return a.host_name.localeCompare(b.host_name);
+                    });
+                });
+
+                const formatSize = (bytes) => {
+                    if (bytes === 0) return '0 B';
+                    const k = 1024, sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return (bytes / Math.pow(k, i)).toFixed(1) + sizes[i];
+                };
+                
+                const isOnline = (ts) => (Date.now()/1000 - ts) < 15;
+                const formatTime = (ts) => new Date(ts*1000).toLocaleTimeString('zh-CN', {hour12:false});
+                const getLoadColor = (n) => n > 90 ? '#ef4444' : (n > 70 ? '#f59e0b' : '#3b82f6');
+
+                const calculateNextDate = (startStr, cycle) => {
+                    if (!startStr || startStr === '未设置') return new Date('2099-01-01');
+                    let due = new Date(startStr);
+                    const now = new Date();
+                    now.setHours(0,0,0,0); due.setHours(0,0,0,0);
+                    while (due < now) {
+                        if (cycle === 'YEAR') due.setFullYear(due.getFullYear() + 1);
+                        else due.setMonth(due.getMonth() + 1);
+                    }
+                    return due;
+                };
+                const getNextDueDate = (start, cycle) => calculateNextDate(start, cycle).toLocaleDateString('zh-CN');
+                const getDaysLeft = (h) => Math.ceil((calculateNextDate(h.start_date, h.billing_cycle) - new Date().setHours(0,0,0,0))/(86400000));
+                
+                const getDueClass = (h) => {
+                    const days = getDaysLeft(h);
+                    if (days <= 3) return 'danger';
+                    if (days <= 7) return 'warn';
+                    return '';
+                };
+
+                const fetchData = async () => {
+                    try {
+                        const res = await fetch('/api/stats');
+                        hosts.value = await res.json();
+                    } catch(e) {}
+                };
+
+                onMounted(() => {
+                    // 初始化主题：默认黑，除非用户存了 'light'
+                    const savedTheme = localStorage.getItem('g-probe-theme');
+                    if (savedTheme === 'light') {
+                        isDarkMode.value = false;
+                        applyTheme(false);
+                    } else {
+                        applyTheme(true);
+                    }
+                    
+                    fetchData();
+                    setInterval(fetchData, 2000);
+                });
+
+                return { hosts, sortedHosts, isDarkMode, toggleTheme, formatSize, isOnline, formatTime, getLoadColor, getNextDueDate, getDaysLeft, getDueClass };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
