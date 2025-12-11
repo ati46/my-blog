@@ -4,6 +4,8 @@
 功能： 实时监控 CPU、内存、硬盘、流量、网速，管理 VPS 续费周期与到期日。
 
 特点： 单二进制文件部署、支持 IPv4/IPv6、支持 Nginx 反代 (WSS)、支持多节点鉴权、支持深色模式。
+<img width="1360" height="660" alt="image" src="https://github.com/user-attachments/assets/3510a422-b05d-42d5-8e11-c97134c1691c" />
+
 ### 目录结构
 推荐的项目文件结构：
 ```
