@@ -1,23 +1,24 @@
 {
-  "liwentaodeMacBook-Pro.local": {
+  "local": {
     "secret": "key_for_hk_12345",
-    "host_name": "liwentaodeMacBook-Pro.local",
-    "cpu": 22.914572866513453,
-    "mem_used": 13.395706176757812,
+    "host_name": "local",
+    "cpu": 19.215291747425432,
+    "mem_used": 12.888565063476562,
     "mem_total": 16,
     "disk_used": 344,
-    "last_seen": 1765267950,
-    "speed_in": 36586,
-    "speed_out": 19123,
-    "month_in": 3270504365,
-    "month_out": 2844511560,
-    "last_raw_in": 16165895304,
-    "last_raw_out": 12097838783,
-    "last_update": 1765267950,
+    "last_seen": 1765418886,
+    "speed_in": 30736,
+    "speed_out": 17063,
+    "month_in": 4549127962,
+    "month_out": 4119211817,
+    "last_raw_in": 17444518901,
+    "last_raw_out": 13372539040,
+    "last_update": 1765418886,
     "cost": "$10",
     "billing_cycle": "YEAR",
     "reset_day": 2,
     "start_date": "2023-12-10",
-    "location": "local"
+    "location": "local",
+    "traffic_limit_gb": 500
   }
 }

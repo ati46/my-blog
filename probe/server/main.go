@@ -51,6 +51,7 @@ type HostNode struct {
 	ResetDay     int    `json:"reset_day"`
 	StartDate    string `json:"start_date"`
 	Location     string `json:"location"`
+	TrafficLimitGB int64 `json:"traffic_limit_gb"`
 }
 
 var (
